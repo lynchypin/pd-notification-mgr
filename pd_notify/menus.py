@@ -39,7 +39,8 @@ def main_menu() -> str:
         choices=[
             {"name": "List all users", "value": "all_users"},
             {"name": "List users by team", "value": "by_team"},
-            {"name": "Bulk set notification rules", "value": "bulk"},
+            {"name": "Bulk update selected users", "value": "bulk_select"},
+            {"name": "Bulk set notification rules (by scope)", "value": "bulk"},
             {"name": "Exit", "value": "exit"},
         ],
     )
@@ -48,7 +49,7 @@ def main_menu() -> str:
 
 def select_user(users: list[dict]) -> Optional[dict]:
     choices = [
-        {"name": f"{u['name']} ({u['email']})", "value": u["id"]}
+        {"name": f"{u.get('name', u['id'])} ({u.get('email', '')})", "value": u["id"]}
         for u in users
     ]
     choices.append({"name": "← Back", "value": None})
@@ -57,6 +58,32 @@ def select_user(users: list[dict]) -> Optional[dict]:
     if selected_id is None:
         return None
     return next(u for u in users if u["id"] == selected_id)
+
+
+def select_users_multi(users: list[dict]) -> list[dict]:
+    choices = [
+        {"name": f"{u.get('name', u['id'])} ({u.get('email', '')})", "value": u["id"]}
+        for u in users
+    ]
+    prompt = inquirer.checkbox(
+        message="Select users (space to toggle, enter to confirm):",
+        choices=choices,
+        validate=lambda result: len(result) > 0,
+        invalid_message="Select at least one user",
+    )
+    selected_ids = _inquire(prompt)
+    return [u for u in users if u["id"] in selected_ids]
+
+
+def bulk_select_scope_menu() -> str:
+    prompt = inquirer.select(
+        message="Select users from:",
+        choices=[
+            {"name": "All users", "value": "all_users"},
+            {"name": "A specific team", "value": "team"},
+        ],
+    )
+    return _inquire(prompt)
 
 
 def select_team(teams: list[dict]) -> Optional[dict]:

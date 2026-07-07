@@ -6,7 +6,8 @@ Interactive terminal tool for viewing and managing PagerDuty on-call notificatio
 
 - Browse users (all or by team)
 - View notification rules and contact methods per user
-- Edit, add, or delete notification rules
+- Edit, add, or delete notification rules individually
+- Bulk update selected users — pick from all users or a team, multi-select with checkboxes, then apply rules to just those users
 - Bulk apply rules by team, escalation policy, or org-wide
 - Compliance reporting showing who matches, who's partial, who's missing
 
@@ -31,7 +32,7 @@ pd-notify
 
 ## Requirements
 
-- Python 3.10+
+- Python 3.9+
 - PagerDuty API token with admin permissions (to manage notification rules for other users)
 
 ## Development

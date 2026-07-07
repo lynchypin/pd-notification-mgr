@@ -118,7 +118,7 @@ class TestPagerDutyClient:
         rate_limited = MagicMock(spec=httpx.Response)
         rate_limited.status_code = 429
         rate_limited.headers = {"Retry-After": "1"}
-        rate_limited.raise_for_status.side_effect = httpx.HTTPError(
+        rate_limited.raise_for_status.side_effect = httpx.HTTPStatusError(
             "429", request=MagicMock(), response=rate_limited
         )
         success = _mock_response({"users": [], "more": False})
